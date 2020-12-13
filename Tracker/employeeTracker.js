@@ -11,6 +11,14 @@ const connection = mysql.createConnection({
   database: "employee_trackerDB",
 });
 
+// EMPLOYEE TRACKER Display
+figlet("EMPLOYEE TRACKER", function (err, data) {
+  if (err) throw err;
+  console.log(data);
+});
+
+// MAIN QUESTIONS - Need to add manager?
+
 const mainQuestion = () => {
   inquirer
     .prompt({
@@ -19,10 +27,10 @@ const mainQuestion = () => {
       message: "What would you like to do?",
       choices: [
         "Add Employee",
-        "Remove Employee",
-        "View Employee",
+        // "Remove Employee",
+        "View All Employees",
         "Update Employee Role",
-        "Update Department",
+        "View Departments",
         "View All Employees",
         "EXIT",
       ],
@@ -31,14 +39,14 @@ const mainQuestion = () => {
       switch (task) {
         case "Add Employee":
           return addEmployee();
-        case "Remove Employee":
-          return removeEmployee();
-        case "View Employee":
-          return viewEmployee();
+        // case "Remove Employee":
+        //   return removeEmployee();
+        case "View All Employees":
+          return viewAllEmployees();
         case "Update Employee Role":
           return employeeRole();
-        case "Updated Department":
-          return updatedDepartment();
+        case "View Departments":
+          return viewDepartments();
         case "View All Employees":
           return viewAll();
         case "EXIT":
@@ -47,7 +55,7 @@ const mainQuestion = () => {
     });
 };
 
-// Add employee to EMPLOYEEINFO TABLE
+// CHECKED - Add employee to EMPLOYEE INFO TABLE
 
 const addEmployee = () => {
   inquirer
@@ -116,10 +124,29 @@ const addEmployee = () => {
     });
 };
 
+// CHECKED - VIEW ALL Employee's from EMPLOYEE info table.
+const viewAllEmployees = () => {
+  connection.query("SELECT * FROM employeeInfo", (err, res) => {
+    if (err) throw err;
+    console.table(res);
+    mainQuestion();
+  });
+};
+
+// CHECKED - VIEW ALL departments
+const viewDepartments = () => {
+  connection.query("SELECT dept_name FROM departments", (err, res) => {
+    if (err) throw err;
+    console.table(res);
+    mainQuestion();
+  });
+};
+
+const removeEmployee = () => {};
+
+const employeeRole = () => {};
+
 connection.connect((err) => {
   if (err) throw err;
-  figlet("EMPLOYEE", function (err) {
-    if (err) throw err;
-  });
   mainQuestion();
 });
