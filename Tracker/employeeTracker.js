@@ -12,7 +12,7 @@ const connection = mysql.createConnection({
 });
 
 // EMPLOYEE TRACKER Display
-figlet("EMPLOYEE TRACKER", function (err, data) {
+figlet("EMPLOYEE MANAGER", function (err, data) {
   if (err) throw err;
   console.log(data);
 });
