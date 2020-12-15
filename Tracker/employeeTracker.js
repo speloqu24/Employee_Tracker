@@ -31,7 +31,6 @@ const mainQuestion = () => {
         "View All Employees",
         "Update Employee Role",
         "View Departments",
-        "View All Employees",
         "EXIT",
       ],
     })
@@ -44,7 +43,7 @@ const mainQuestion = () => {
         case "View All Employees":
           return viewAllEmployees();
         case "Update Employee Role":
-          return employeeRole();
+          return updateEmployeeRole();
         case "View Departments":
           return viewDepartments();
         case "View All Employees":
@@ -56,7 +55,6 @@ const mainQuestion = () => {
 };
 
 // CHECKED - Add employee to EMPLOYEE INFO TABLE
-
 const addEmployee = () => {
   inquirer
     .prompt([
@@ -70,12 +68,6 @@ const addEmployee = () => {
         name: "last_name",
         message: "What is the employee's last name?",
       },
-      // {
-      //   type: "list",
-      //   name: "department",
-      //   message: "What department is the employee in?",
-      //   choices: [],
-      // },
       {
         type: "list",
         name: "emp_role",
@@ -91,18 +83,6 @@ const addEmployee = () => {
           "Lead Engineer",
         ],
       },
-      // {
-      //   type: "rawlist",
-      //   name: "manager",
-      //   // choices() {
-      //   //   const allManagers = []; //empty array we push the name of managers.
-      //   //   res.forEach(({ first_name }) => {
-      //   //     managerArray.push(first_name);
-      //   //   });
-      //   //   return managerArray;
-      //   // },
-      //   message: "Who is the employee's manager?"
-      // },
     ])
     .then(({ first_name, last_name, emp_role }) => {
       connection.query(
@@ -142,9 +122,57 @@ const viewDepartments = () => {
   });
 };
 
-const removeEmployee = () => {};
+// ADD MANAGER TO EMPLOYEE - pull list of employees entered into system, list them as choices
+// const addManager = () => {
+//   inquirer.prompt({
+//     type: "list",
+//     name: "manager",
+//     message: "Who is this employee's manager?",
+//     choices: [],
+//   });
+// };
 
-const employeeRole = () => {};
+// UPDATE EMPLOYEE ROLE - Pull employee info from SQL
+// const updateEmployeeRole = () => {
+//   inquirer.prompt({
+//     type: "list",
+//     name: "newRole",
+//     message: "What employee's role would you like to update? ",
+//     choices: function choices() {
+//       connection.query(
+//         "Select first_name FROM employeeInfo",
+//         (err, res) => {
+//           if (err) throw err;
+//         },
+//         {
+//           type: "list",
+//           name: "roleSelection",
+//           message: "What role would you like to assign?",
+//           choices: [
+//             "Sales Lead",
+//             "Lead Engineer",
+//             "Salesperson",
+//             "Software Engineer",
+//             "Accountant",
+//             "Legal Team Lead",
+//             "Lawyer",
+//             "Lead Engineer",
+//           ],
+//         }
+//       );
+//     },
+//   });
+// };
+
+// const removeEmployee = () => {};
+
+//
+// const employeeRole = () => {
+//   connection.query("SELECT title FROM roles", (err, res) => {
+//     if (err) throw err;
+//     console.table(res);
+//   });
+// };
 
 connection.connect((err) => {
   if (err) throw err;

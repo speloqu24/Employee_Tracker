@@ -32,7 +32,7 @@ INSERT INTO departments (dept_name)
 VALUES ("Sales"),("Engineering"),("Accounting"), ("Legal");
 
 INSERT INTO roles (title, salary, department_id)
-VALUES ("Sales Lead", 1000000, 1),("Lead Engineer", 200000,2),("Salesperson", 80000,3), ("Software Engineer", 150000,4),("Accountant", 70000, 5),("Legal Team Lead", 65000,6),("Lawyer", 90000, 7);
+VALUES ("Sales Lead", 1000000, 1),("Salesperson", 80000,1),("Lead Engineer", 200000,2),("Software Engineer", 150000,2),("Accountant", 70000, 3),("Legal Team Lead", 65000,4),("Lawyer", 90000, 4);
 
 -- INSERT into employeeInfo (first_name, last_name, roles_id, manager_id)
 
