@@ -26,8 +26,9 @@ const mainQuestion = () => {
       choices: [
         "Add Employee",
         // "Remove Employee",
-        "View All Employees",
         "Add Role",
+        "Add Department",
+        "View All Employees",
         // "Remove Employee",
         // "Update Employee Manager",
         "View Departments",
@@ -42,6 +43,8 @@ const mainQuestion = () => {
         //   return removeEmployee();
         case "View All Employees":
           return viewAllEmployees();
+        case "Add Department":
+          return addDepartment();
         case "Add Role":
           return addRole();
         case "View Departments":
@@ -53,6 +56,7 @@ const mainQuestion = () => {
 };
 
 // CHECKED - Add employee to EMPLOYEE INFO TABLE
+// COMMENTED OUT MANAGER QUESTION
 const addEmployee = () => {
   connection.query("SELECT id, title FROM roles", (err, res) => {
     if (err) throw err;
@@ -64,86 +68,66 @@ const addEmployee = () => {
       };
     });
     // console.log(rolesArr);
-    connection.query(
-      "SELECT id, first_name, last_name FROM employeeInfo",
-      (error, response) => {
-        if (error) throw error;
-        // console.log(response);
-        const managersArr = response.map((manageIt) => {
-          return {
-            name: manageIt.first_name + " " + manageIt.last_name,
-            value: manageIt.id,
-          };
-        });
-        const none = "NONE";
-        inquirer
-          .prompt([
-            {
-              type: "input",
-              name: "first_name",
-              message: "What is the employee's first name?",
-            },
-            {
-              type: "input",
-              name: "last_name",
-              message: "What is the employee's last name?",
-            },
-            {
-              type: "list",
-              name: "roles_id",
-              message: "What is the role of the employee?",
-              choices: rolesArr,
-            },
-            {
-              type: "list",
-              name: "manager_id",
-              message: "Who is the employee's manager?",
-              choices: managersArr,
-              // What happens if there's no manager?
-            },
-          ])
-          .then(({ first_name, last_name, roles_id, manager_id }) => {
-            connection.query(
-              "INSERT INTO employeeInfo SET ?",
-              {
-                first_name,
-                last_name,
-                roles_id,
-                manager_id,
-              },
-              (err) => {
-                if (err) throw err;
-                console.log(
-                  `Added Employee Info: ${first_name} , ${last_name}, ${roles_id}, ${manager_id}`
-                );
-                mainQuestion();
-              }
+
+    // ERROR THROWN, NO MANAGERS LISTED.
+
+    // connection.query(
+    //   "SELECT id, first_name, last_name FROM employeeInfo",
+    //   (error, response) => {
+    //     if (error) throw error;
+    //     // console.log(response);
+    //     const managersArr = response.map((manageIt) => {
+    //       return {
+    //         name: manageIt.first_name + " " + manageIt.last_name,
+    //         value: manageIt.id,
+    //       };
+    //     });
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          name: "first_name",
+          message: "What is the employee's first name?",
+        },
+        {
+          type: "input",
+          name: "last_name",
+          message: "What is the employee's last name?",
+        },
+        {
+          type: "list",
+          name: "roles_id",
+          message: "What is the role of the employee?",
+          choices: rolesArr,
+        },
+        // {
+        //   type: "list",
+        //   name: "manager_id",
+        //   message: "Who is the employee's manager?",
+        //   choices: managersArr,
+        //   // What happens if there's no manager?
+        // },
+      ])
+      .then(({ first_name, last_name, roles_id, manager_id }) => {
+        connection.query(
+          "INSERT INTO employeeInfo SET ?",
+          {
+            first_name,
+            last_name,
+            roles_id,
+            manager_id,
+          },
+          (err) => {
+            if (err) throw err;
+            console.log(
+              `Added Employee Info: ${first_name} , ${last_name}, ${roles_id}, ${manager_id}`
             );
-          });
-      }
-    );
+            mainQuestion();
+          }
+        );
+      });
   });
-};
-
-// CHECKED - VIEW ALL Employee's from EMPLOYEE info table.
-const viewAllEmployees = () => {
-  connection.query(
-    "SELECT employeeInfo.id, employeeInfo.first_name, employeeInfo.last_name, roles.title, roles.salary, departments.dept_name FROM departments RIGHT JOIN roles ON departments.id = roles.department_id RIGHT JOIN employeeInfo ON roles.id = employeeInfo.roles_id",
-    (err, res) => {
-      if (err) throw err;
-      console.table(res);
-      mainQuestion();
-    }
-  );
-};
-
-// CHECKED - VIEW ALL departments
-const viewDepartments = () => {
-  connection.query("SELECT dept_name FROM departments", (err, res) => {
-    if (err) throw err;
-    console.table(res);
-    mainQuestion();
-  });
+  // });
 };
 
 const addRole = () => {
@@ -194,6 +178,56 @@ const addRole = () => {
       );
   });
 };
+
+const addDepartment = () => {
+  connection.query("SELECT id, dept_name FROM departments", (err, res) => {
+    if (err) throw err;
+    // console.log(res);
+  });
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "dept_name",
+        message: "What department would you like to add?",
+      },
+    ])
+    .then(({ dept_name }) =>
+      connection.query(
+        "INSERT INTO departments SET ?",
+        {
+          dept_name,
+        },
+        (err) => {
+          if (err) throw err;
+          console.log(`Department ${dept_name} has been added`);
+          mainQuestion();
+        }
+      )
+    );
+};
+
+// CHECKED - VIEW ALL Employee's from EMPLOYEE info table.
+const viewAllEmployees = () => {
+  connection.query(
+    "SELECT employeeInfo.id, employeeInfo.first_name, employeeInfo.last_name, roles.title, roles.salary, departments.dept_name FROM departments RIGHT JOIN roles ON departments.id = roles.department_id RIGHT JOIN employeeInfo ON roles.id = employeeInfo.roles_id",
+    (err, res) => {
+      if (err) throw err;
+      console.table(res);
+      mainQuestion();
+    }
+  );
+};
+
+// CHECKED - VIEW ALL departments
+const viewDepartments = () => {
+  connection.query("SELECT dept_name FROM departments", (err, res) => {
+    if (err) throw err;
+    console.table(res);
+    mainQuestion();
+  });
+};
+
 // update role, add employee, remove employee DELETE ID
 
 connection.connect((err) => {

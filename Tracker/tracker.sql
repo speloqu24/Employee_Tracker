@@ -34,7 +34,6 @@ INSERT INTO roles (title, salary, department_id)
 VALUES ("Sales Lead", 1000000, 1),("Salesperson", 80000,1),("Lead Engineer", 200000,2),("Software Engineer", 150000,2),("Accountant", 70000, 3),("Legal Team Lead", 65000,4),("Lawyer", 90000, 4);
 
 
-
 SELECT * FROM departments;
 SELECT * FROM roles;
 SELECT * FROM employeeInfo;
