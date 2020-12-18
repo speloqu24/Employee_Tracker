@@ -134,6 +134,7 @@ const addEmployee = () => {
     // });
   });
 };
+
 //CHECKED - Add role with title, salary and department information.
 const addRole = () => {
   connection.query("SELECT id, dept_name FROM departments", (err, res) => {
@@ -234,6 +235,7 @@ const viewDepartments = () => {
   });
 };
 
+// UPDATE Employee's role
 const updateEmployee = () => {
   connection.query(
     "SELECT id, first_name, last_name FROM employeeInfo",
