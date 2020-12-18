@@ -11,7 +11,7 @@ const connection = mysql.createConnection({
   database: "employee_trackerDB",
 });
 
-// EMPLOYEE TRACKER Display
+// EMPLOYEE MANAGER Display
 figlet("EMPLOYEE MANAGER", function (err, data) {
   if (err) throw err;
   console.log(data);
@@ -25,13 +25,13 @@ const mainQuestion = () => {
       message: "What would you like to do?",
       choices: [
         "Add Employee",
-        // "Remove Employee",
         "Add Role",
         "Add Department",
         "View All Employees",
         // "Remove Employee",
         // "Update Employee Manager",
         "View Departments",
+        "Update Employee Role",
         "EXIT",
       ],
     })
@@ -39,8 +39,8 @@ const mainQuestion = () => {
       switch (task) {
         case "Add Employee":
           return addEmployee();
-        // case "Remove Employee":
-        //   return removeEmployee();
+        case "Update Employee Role":
+          return updateEmployee();
         case "View All Employees":
           return viewAllEmployees();
         case "Add Department":
@@ -143,7 +143,7 @@ const addRole = () => {
         name: deptIt.dept_name,
         value: deptIt.id,
       };
-      console.log(res);
+      // console.log(res);
     });
     inquirer
       .prompt([
@@ -184,8 +184,19 @@ const addRole = () => {
   });
 };
 
-// CHECKED - ADD Department
+// CHECKED - VIEW ALL Employee's from EMPLOYEE info table.
+const viewAllEmployees = () => {
+  connection.query(
+    "SELECT employeeInfo.id, employeeInfo.first_name, employeeInfo.last_name, roles.title, roles.salary, departments.dept_name FROM departments RIGHT JOIN roles ON departments.id = roles.department_id RIGHT JOIN employeeInfo ON roles.id = employeeInfo.roles_id",
+    (err, res) => {
+      if (err) throw err;
+      console.table(res);
+      mainQuestion();
+    }
+  );
+};
 
+// CHECKED - ADD Department
 const addDepartment = () => {
   connection.query("SELECT id, dept_name FROM departments", (err, res) => {
     if (err) throw err;
@@ -214,18 +225,6 @@ const addDepartment = () => {
     );
 };
 
-// CHECKED - VIEW ALL Employee's from EMPLOYEE info table.
-const viewAllEmployees = () => {
-  connection.query(
-    "SELECT employeeInfo.id, employeeInfo.first_name, employeeInfo.last_name, roles.title, roles.salary, departments.dept_name FROM departments RIGHT JOIN roles ON departments.id = roles.department_id RIGHT JOIN employeeInfo ON roles.id = employeeInfo.roles_id",
-    (err, res) => {
-      if (err) throw err;
-      console.table(res);
-      mainQuestion();
-    }
-  );
-};
-
 // CHECKED - VIEW ALL departments
 const viewDepartments = () => {
   connection.query("SELECT dept_name FROM departments", (err, res) => {
@@ -235,25 +234,45 @@ const viewDepartments = () => {
   });
 };
 
-// const updateRole = () => {
-//   console.log("Updating employee Role");
-//   const query = connection.query(
-//     "UPDATE roles SET ? WHERE ?",
-//     [
-//       {
-//         quantity: 100,
-//       },
-//       {
-//         flavor: "Rocky Road",
-//       },
-//     ],
-//     (err, res) => {
-//       if (err) throw err;
-//       console.log(`${res.affectedRows} products updated!\n`);
-//       // Call deleteProduct AFTER the UPDATE completes
-//       deleteProduct();
-//     }
-//   );
+const updateEmployee = () => {
+  connection.query(
+    "SELECT id, first_name, last_name FROM employeeInfo",
+    (err, res) => {
+      if (err) throw err;
+      const empArr = res.map((empIt) => {
+        return {
+          name: empIt.first_name,
+          value: empIt.id,
+        };
+      });
+      inquirer.prompt([
+        {
+          type: "list",
+          name: "roles_id",
+          message: "What employee's role would you like to change?",
+          choices: empArr,
+        },
+      ]);
+      // then(({ title, salary, department_id }) =>
+      //   connection.query(
+      //     "INSERT INTO roles SET ?",
+      //     {
+      //       title,
+      //       salary,
+      //       department_id,
+      //     },
+      //     (err) => {
+      //       if (err) throw err;
+      //       console.log(
+      //         `Updated Role of ${title} has been added to ${department_id}`
+      //       );
+      //       mainQuestion();
+      //     }
+      //   )
+      // );
+    }
+  );
+};
 
 // logs the actual query being run
 // console.log(query.sql);
