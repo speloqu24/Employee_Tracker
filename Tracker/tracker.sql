@@ -23,9 +23,10 @@ CREATE TABLE employeeInfo (
   last_name VARCHAR(40) NOT NULL, 
   roles_id INT NOT NULL,
   manager_id INT,
-  FOREIGN KEY (roles_id) REFERENCES roles(id),
-  FOREIGN KEY (manager_id) REFERENCES employeeInfo(id)
+  FOREIGN KEY (roles_id) REFERENCES roles(id)
+  -- FOREIGN KEY (manager_id) REFERENCES employeeInfo(id)
 );
+
 
 INSERT INTO departments (dept_name)
 VALUES ("Sales"),("Engineering"),("Accounting"), ("Legal");
@@ -33,6 +34,8 @@ VALUES ("Sales"),("Engineering"),("Accounting"), ("Legal");
 INSERT INTO roles (title, salary, department_id)
 VALUES ("Sales Lead", 1000000, 1),("Salesperson", 80000,1),("Lead Engineer", 200000,2),("Software Engineer", 150000,2),("Accountant", 70000, 3),("Legal Team Lead", 65000,4),("Lawyer", 90000, 4);
 
+-- INSERT INTO employeeInfo (first_name, last_name, roles_id)
+-- VALUES ("sam", "peloquin", 0);
 
 SELECT * FROM departments;
 SELECT * FROM roles;
