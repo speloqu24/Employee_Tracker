@@ -37,9 +37,6 @@ VALUES ("Sales Lead", 1000000, 1),("Salesperson", 80000,1),("Lead Engineer", 200
 -- INSERT INTO employeeInfo (first_name, last_name, roles_id)
 -- VALUES ("sam", "peloquin", 0);
 
-SELECT e.id, e.first_name, e.last_name, title, salary, dept_name, CONCAT(m.first_name, ' ', m.last_name) AS "Manager" FROM employee e LEFT JOIN employee m ON m.id = e.managerId LEFT JOIN roles ON e.rolesId = (roles.rId) LEFT JOIN department ON roles.departId = (department.dId) ORDER by e.id;
-
-
 SELECT * FROM departments;
 SELECT * FROM roles;
 SELECT * FROM employeeInfo;
