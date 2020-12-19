@@ -188,7 +188,7 @@ const addRole = () => {
 // CHECKED - VIEW ALL Employee's from EMPLOYEE info table.
 const viewAllEmployees = () => {
   connection.query(
-    "SELECT employeeInfo.id, employeeInfo.first_name, employeeInfo.last_name, roles.title, roles.salary, departments.dept_name FROM departments RIGHT JOIN roles ON departments.id = roles.department_id RIGHT JOIN employeeInfo ON roles.id = employeeInfo.roles_id",
+    "SELECT e.id, e.first_name, e.last_name, title, salary, dept_name, CONCAT(m.first_name, ' ', m.last_name) AS 'Manager' FROM employeeInfo e LEFT JOIN employeeInfo m ON m.id = e.manager_id LEFT JOIN roles ON e.roles_Id = (roles.Id) LEFT JOIN departments ON roles.department_id = (departments.Id) ORDER by e.id;",
     (err, res) => {
       if (err) throw err;
       console.table(res);
@@ -277,6 +277,9 @@ const updateEmployee = () => {
 
 // logs the actual query being run
 // console.log(query.sql);
+
+// VIEW ALL TABLE
+// "SELECT employeeInfo.id, employeeInfo.first_name, employeeInfo.last_name, roles.title, roles.salary, departments.dept_name FROM departments RIGHT JOIN roles ON departments.id = roles.department_id RIGHT JOIN employeeInfo ON roles.id = employeeInfo.roles_id,",
 
 connection.connect((err) => {
   if (err) throw err;
