@@ -247,39 +247,36 @@ const updateEmployee = () => {
           value: empIt.id,
         };
       });
-      inquirer.prompt([
-        {
-          type: "list",
-          name: "roles_id",
-          message: "What employee's role would you like to change?",
-          choices: empArr,
-        },
-      ]);
-      // then(({ title, salary, department_id }) =>
-      //   connection.query(
-      //     "INSERT INTO roles SET ?",
-      //     {
-      //       title,
-      //       salary,
-      //       department_id,
-      //     },
-      //     (err) => {
-      //       if (err) throw err;
-      //       console.log(
-      //         `Updated Role of ${title} has been added to ${department_id}`
-      //       );
-      //       mainQuestion();
-      //     }
-      //   )
-      // );
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "roles_id",
+            message: "What employee's role would you like to change?",
+            choices: empArr,
+          },
+        ])
+        .then(({ roles_id }) =>
+          connection.query(
+            "UPDATE roles SET title ?",
+            {
+              roles_id,
+            },
+            (err) => {
+              if (err) throw err;
+              console.log(
+                `Updated Role of ${title} has been added to ${department_id}`
+              );
+              mainQuestion();
+            }
+          )
+        );
     }
   );
 };
 
 // logs the actual query being run
 // console.log(query.sql);
-
-// update role, add employee, remove employee DELETE ID
 
 connection.connect((err) => {
   if (err) throw err;
