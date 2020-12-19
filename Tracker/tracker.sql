@@ -35,8 +35,7 @@ INSERT INTO roles (title, salary, department_id)
 VALUES ("Sales Lead", 1000000, 1),("Salesperson", 80000,1),("Lead Engineer", 200000,2),("Software Engineer", 150000,2),("Accountant", 70000, 3),("Legal Team Lead", 65000,4),("Lawyer", 90000, 4);
 
 USE employee_trackerDB;
-INSERT INTO employeeInfo (first_name, last_name, roles_id, manager_id)
-VALUES ("Jackson", "Lee", 2,0);
+INSERT INTO employeeInfo(first_name, last_name, roles_id, manager_id) VALUES ("John", "Doe", 1, null),("Mike", "Chan", 2, 1),("Ashley", "Rodriguez", 3, null),("Kevin", "Tupik", 4, 3),("Malia", "Brown", 3, null),("Sarah", "Lourd", 6, null),("Tom", "Allen", 7, 7);
 
 SELECT * FROM departments;
 SELECT * FROM roles;

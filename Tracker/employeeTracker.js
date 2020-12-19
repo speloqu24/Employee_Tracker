@@ -11,12 +11,13 @@ const connection = mysql.createConnection({
   database: "employee_trackerDB",
 });
 
-// EMPLOYEE MANAGER Display
+// Fun employee manager display
 figlet("EMPLOYEE MANAGER", function (err, data) {
   if (err) throw err;
   console.log(data);
 });
 
+// Main question function, asking user what they'd like to do in this application.
 const mainQuestion = () => {
   inquirer
     .prompt({
@@ -28,6 +29,7 @@ const mainQuestion = () => {
         "Add Role",
         "Add Department",
         "View All Employees",
+        "View Roles",
         "View Departments",
         "Update Employee Role",
         "Remove Employee",
@@ -47,6 +49,8 @@ const mainQuestion = () => {
           return addDepartment();
         case "Add Role":
           return addRole();
+        case "View Roles":
+          return viewRole();
         case "View Departments":
           return viewDepartments();
         case "Remove Employee":
@@ -57,7 +61,7 @@ const mainQuestion = () => {
     });
 };
 
-// CHECKED - Add employee to EMPLOYEE INFO TABLE
+//Add an employee to EMPLOYEE table in database
 const addEmployee = () => {
   connection.query("SELECT id, title FROM roles", (err, res) => {
     if (err) throw err;
@@ -130,7 +134,7 @@ const addEmployee = () => {
   });
 };
 
-//CHECKED - Add role with title, salary and department information.
+//Add a new role to an employee with title, salary and department information.
 const addRole = () => {
   connection.query("SELECT id, dept_name FROM departments", (err, res) => {
     if (err) throw err;
@@ -179,19 +183,7 @@ const addRole = () => {
   });
 };
 
-// CHECKED - VIEW ALL Employee info and Manager name using JOINS
-const viewAllEmployees = () => {
-  connection.query(
-    "SELECT e.id, e.first_name, e.last_name, title, salary, dept_name, CONCAT(m.first_name, ' ', m.last_name) AS 'Manager' FROM employeeInfo e LEFT JOIN employeeInfo m ON m.id = e.manager_id LEFT JOIN roles ON e.roles_Id = (roles.Id) LEFT JOIN departments ON roles.department_id = (departments.Id) ORDER by e.id;",
-    (err, res) => {
-      if (err) throw err;
-      console.table(res);
-      mainQuestion();
-    }
-  );
-};
-
-// CHECKED - ADD New Department
+// Add a new department to the database
 const addDepartment = () => {
   connection.query("SELECT id, dept_name FROM departments", (err, res) => {
     if (err) throw err;
@@ -220,7 +212,28 @@ const addDepartment = () => {
     );
 };
 
-// CHECKED - VIEW ALL departments
+// View all Employees info including manager info
+const viewAllEmployees = () => {
+  connection.query(
+    "SELECT e.id, e.first_name, e.last_name, title, salary, dept_name, CONCAT(m.first_name, ' ', m.last_name) AS 'Manager' FROM employeeInfo e LEFT JOIN employeeInfo m ON m.id = e.manager_id LEFT JOIN roles ON e.roles_Id = (roles.Id) LEFT JOIN departments ON roles.department_id = (departments.Id) ORDER by e.id;",
+    (err, res) => {
+      if (err) throw err;
+      console.table(res);
+      mainQuestion();
+    }
+  );
+};
+
+// View all the roles currently in the database
+const viewRole = () => {
+  connection.query("SELECT title, salary FROM roles", (err, res) => {
+    if (err) throw err;
+    console.table(res);
+    mainQuestion();
+  });
+};
+
+// View all departments currently in database
 const viewDepartments = () => {
   connection.query("SELECT dept_name FROM departments", (err, res) => {
     if (err) throw err;
@@ -229,7 +242,7 @@ const viewDepartments = () => {
   });
 };
 
-// UPDATE Employee's role
+// Update current Employee's role in database
 const updateEmployee = () => {
   connection.query(
     "SELECT id, first_name, last_name FROM employeeInfo",
@@ -283,6 +296,7 @@ const updateEmployee = () => {
   );
 };
 
+// Remove employee from database
 const removeEmployee = () => {
   connection.query(
     "SELECT id, first_name, last_name FROM employeeInfo",
@@ -317,11 +331,6 @@ const removeEmployee = () => {
     }
   );
 };
-
-// logs the actual query being run
-// console.log(query.sql);
-// VIEW ALL TABLE
-// "SELECT employeeInfo.id, employeeInfo.first_name, employeeInfo.last_name, roles.title, roles.salary, departments.dept_name FROM departments RIGHT JOIN roles ON departments.id = roles.department_id RIGHT JOIN employeeInfo ON roles.id = employeeInfo.roles_id,",
 
 connection.connect((err) => {
   if (err) throw err;
