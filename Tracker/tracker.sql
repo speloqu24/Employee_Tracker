@@ -34,8 +34,9 @@ VALUES ("Sales"),("Engineering"),("Accounting"), ("Legal");
 INSERT INTO roles (title, salary, department_id)
 VALUES ("Sales Lead", 1000000, 1),("Salesperson", 80000,1),("Lead Engineer", 200000,2),("Software Engineer", 150000,2),("Accountant", 70000, 3),("Legal Team Lead", 65000,4),("Lawyer", 90000, 4);
 
--- INSERT INTO employeeInfo (first_name, last_name, roles_id)
--- VALUES ("sam", "peloquin", 0);
+USE employee_trackerDB;
+INSERT INTO employeeInfo (first_name, last_name, roles_id, manager_id)
+VALUES ("Jackson", "Lee", 2,0);
 
 SELECT * FROM departments;
 SELECT * FROM roles;

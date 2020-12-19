@@ -30,6 +30,7 @@ const mainQuestion = () => {
         "View All Employees",
         "View Departments",
         "Update Employee Role",
+        "Remove Employee",
         // Update Employee Manager
         "EXIT",
       ],
@@ -48,6 +49,8 @@ const mainQuestion = () => {
           return addRole();
         case "View Departments":
           return viewDepartments();
+        case "Remove Employee":
+          return removeEmployee();
         case "EXIT":
           connection.end();
       }
@@ -270,9 +273,7 @@ const updateEmployee = () => {
               [roles_id, id],
               (err) => {
                 if (err) throw err;
-                console.log(
-                  `Updated Role of ${id} has been changed to to ${roles_id}`
-                );
+                console.log("Your employee's role has been updated!");
                 mainQuestion();
               }
             )
@@ -281,6 +282,42 @@ const updateEmployee = () => {
     }
   );
 };
+
+const removeEmployee = () => {
+  connection.query(
+    "SELECT id, first_name, last_name FROM employeeInfo",
+    (err, res) => {
+      if (err) throw err;
+      const empArr = res.map((empIt) => {
+        return {
+          name: empIt.first_name + " " + empIt.last_name,
+          value: empIt.id,
+        };
+      });
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "id",
+            message: "Which employee would you like to remove?",
+            choices: empArr,
+          },
+        ])
+        .then(({ id }) => {
+          connection.query(
+            "DELETE FROM employeeInfo WHERE id = ?",
+            [id],
+            (err) => {
+              if (err) throw err;
+              console.log(`Employee has been removed!`);
+              mainQuestion();
+            }
+          );
+        });
+    }
+  );
+};
+
 // logs the actual query being run
 // console.log(query.sql);
 // VIEW ALL TABLE
