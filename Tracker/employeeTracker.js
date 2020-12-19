@@ -28,10 +28,9 @@ const mainQuestion = () => {
         "Add Role",
         "Add Department",
         "View All Employees",
-        // "Remove Employee",
-        // "Update Employee Manager",
         "View Departments",
         "Update Employee Role",
+        // Update Employee Manager
         "EXIT",
       ],
     })
@@ -235,16 +234,17 @@ const updateEmployee = () => {
       if (err) throw err;
       const empArr = res.map((empIt) => {
         return {
-          name: empIt.first_name,
+          name: empIt.first_name + " " + empIt.last_name,
           value: empIt.id,
         };
       });
 
-      connection.query("SELECT title FROM roles", (error, response) => {
+      connection.query("SELECT id, title FROM roles", (error, response) => {
         if (error) throw error;
         const newRolesArr = response.map((roleIt) => {
           return {
             name: roleIt.title,
+            value: roleIt.id,
           };
         });
 
@@ -263,19 +263,15 @@ const updateEmployee = () => {
               choices: newRolesArr,
             },
           ])
-          // return roles to choose from.
-          .then(({ roles_id, id }) =>
+          .then(({ id, roles_id }) =>
             connection.query(
               "UPDATE employeeInfo SET roles_id = ? WHERE id = ?",
               // update role SET role_id WHERE employee_name
-              {
-                roles_id,
-                id,
-              },
+              [roles_id, id],
               (err) => {
                 if (err) throw err;
                 console.log(
-                  `Updated Role of ${title} has been added to ${department_id}`
+                  `Updated Role of ${id} has been changed to to ${roles_id}`
                 );
                 mainQuestion();
               }
@@ -285,10 +281,8 @@ const updateEmployee = () => {
     }
   );
 };
-
 // logs the actual query being run
 // console.log(query.sql);
-
 // VIEW ALL TABLE
 // "SELECT employeeInfo.id, employeeInfo.first_name, employeeInfo.last_name, roles.title, roles.salary, departments.dept_name FROM departments RIGHT JOIN roles ON departments.id = roles.department_id RIGHT JOIN employeeInfo ON roles.id = employeeInfo.roles_id,",
 
