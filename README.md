@@ -2,8 +2,6 @@
 
 Samantha Peloquin
 
-> Deployed Application: TBD
-
 ## Table of Contents
 
 - [Project Description](#description)
