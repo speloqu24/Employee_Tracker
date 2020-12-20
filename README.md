@@ -1,6 +1,5 @@
 # Title: Employee Manager
 
-Samantha Peloquin
 
 ## Table of Contents
 
